@@ -5,7 +5,7 @@ organization := "com.sclasen"
 name := "akka-zk-cluster-seed"
 version := "0.1.11-SNAPSHOT"
 
-scalaVersion := "2.12.4"
+scalaVersion := "2.12.12"
 crossScalaVersions := Seq(scalaVersion.value)
 
 val akkaVersion = "2.5.+"
@@ -74,12 +74,14 @@ lazy val rootProject = (project in file(".")).
         </developer>
       </developers>),
 
-    publishTo := {
+    /*publishTo := {
       val v = version.value
       val nexus = "https://oss.sonatype.org/"
       if (v.trim.endsWith("SNAPSHOT")) Some("snapshots" at nexus + "content/repositories/snapshots")
       else Some("releases" at nexus + "service/local/staging/deploy/maven2")
-    }
+    }*/
+
+
   ).
   settings(Defaults.itSettings:_*).
   settings(SbtMultiJvm.multiJvmSettings:_*).
@@ -97,3 +99,18 @@ lazy val rootProject = (project in file(".")).
 
       }).
   configs(IntegrationTest, MultiJvm)
+
+credentials += Credentials(Path.userHome / ".sbt" / ".credentials")
+
+publishTo := {
+  val nexus = "http://artifactory.svcs.opal.synacor.com/"
+  if (isSnapshot.value)
+    Some(("repository.synacor.com-snapshots" at nexus + "artifactory/synacor-local").withAllowInsecureProtocol(true))
+  else
+    Some(("repository.synacor.com-releases"  at nexus + "artifactory/synacor-local").withAllowInsecureProtocol(true))
+}
+
+enablePlugins(JavaAppPackaging)
+
+publishConfiguration := publishConfiguration.value.withOverwrite(true)
+publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
