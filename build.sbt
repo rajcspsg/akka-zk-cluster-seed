@@ -6,10 +6,10 @@ name := "akka-zk-cluster-seed"
 version := "0.1.11-SNAPSHOT"
 
 scalaVersion := "2.12.4"
-crossScalaVersions := Seq(scalaVersion.value, "2.11.11")
+crossScalaVersions := Seq(scalaVersion.value)
 
-val akkaVersion = "2.5.9"
-val akkaHttpVersion = "10.0.11"
+val akkaVersion = "2.5.+"
+val akkaHttpVersion = "10.0.+"
 
 val akkaDependencies = Seq(
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
@@ -30,10 +30,9 @@ val curatorVersion = "2.12.0"
 val zkDependencies = Seq(
   "curator-framework",
   "curator-recipes"
-).map { 
+).map {
   "org.apache.curator" % _ % curatorVersion exclude("log4j", "log4j") exclude("org.slf4j", "slf4j-log4j12")
 }
-  
 
 val testDependencies = Seq(
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion,
@@ -84,16 +83,17 @@ lazy val rootProject = (project in file(".")).
   ).
   settings(Defaults.itSettings:_*).
   settings(SbtMultiJvm.multiJvmSettings:_*).
-  settings(compile in MultiJvm <<= (compile in MultiJvm) triggeredBy (compile in IntegrationTest)).
-  settings(executeTests in IntegrationTest <<= (executeTests in Test, executeTests in MultiJvm) map {
-    case (testResults, multiNodeResults)  =>
-      val overall =
-        if (testResults.overall.id < multiNodeResults.overall.id)
-          multiNodeResults.overall
-        else
-          testResults.overall
-      Tests.Output(overall,
-        testResults.events ++ multiNodeResults.events,
-        testResults.summaries ++ multiNodeResults.summaries)
-  }).
+  settings(compile in MultiJvm := ((compile in MultiJvm) triggeredBy (compile in IntegrationTest)).value).
+  settings(executeTests in IntegrationTest := {
+    val testResults = (executeTests in Test).value
+    val multiNodeResults = (executeTests in MultiJvm).value
+    val overall = if (testResults.overall.toString.head > multiNodeResults.overall.toString.head)
+      multiNodeResults.overall
+    else
+      testResults.overall
+    Tests.Output(overall,
+      testResults.events ++ multiNodeResults.events,
+      testResults.summaries ++ multiNodeResults.summaries)
+
+      }).
   configs(IntegrationTest, MultiJvm)
