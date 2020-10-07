@@ -4,3 +4,6 @@ target
 project/target
 .env
 .ensime*
+.metals
+.bsp
+project/.bloop

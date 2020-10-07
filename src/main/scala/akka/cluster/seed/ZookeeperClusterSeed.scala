@@ -3,16 +3,16 @@ package akka.cluster.seed
 import java.io.Closeable
 
 import akka.actor._
-import akka.cluster.{AkkaCuratorClient, AutoDownUnresolvedStrategies, Cluster, ZookeeperClusterSeedSettings}
+import akka.cluster.{ AkkaCuratorClient, AutoDownUnresolvedStrategies, Cluster, ZookeeperClusterSeedSettings }
 import org.apache.curator.framework.CuratorFramework
-import org.apache.curator.framework.recipes.cache.{PathChildrenCache, PathChildrenCacheEvent, PathChildrenCacheListener}
-import org.apache.curator.framework.recipes.leader.{LeaderLatch, LeaderLatchListener}
-import org.apache.curator.framework.state.{ConnectionState, ConnectionStateListener}
-import org.apache.zookeeper.KeeperException.{NoNodeException, NodeExistsException}
+import org.apache.curator.framework.recipes.cache.{ PathChildrenCache, PathChildrenCacheEvent, PathChildrenCacheListener }
+import org.apache.curator.framework.recipes.leader.{ LeaderLatch, LeaderLatchListener }
+import org.apache.curator.framework.state.{ ConnectionState, ConnectionStateListener }
+import org.apache.zookeeper.KeeperException.{ NoNodeException, NodeExistsException }
 
 import scala.annotation.tailrec
 import scala.collection.JavaConverters._
-import scala.collection.{immutable, mutable}
+import scala.collection.{ immutable, mutable }
 import scala.concurrent._
 import scala.concurrent.duration._
 import scala.util.Try
@@ -99,14 +99,13 @@ class ZookeeperClusterSeed(system: ExtendedActorSystem) extends Extension {
   if (settings.autoDown) {
 
     @tailrec
-    def waitForLeaderChange(times: Int, delay: Int)
-                           (removedAddress: String): Either[Unit, Unit] =
+    def waitForLeaderChange(times: Int, delay: Int)(removedAddress: String): Either[Unit, Unit] =
       latch.getLeader.getId.equals(removedAddress) match {
-        case false => Left(null)
+        case false => Left(())
         case _ if times > 0 =>
           Thread.sleep(delay)
           waitForLeaderChange(times - 1, delay)(removedAddress)
-        case _ => Right(null)
+        case _ => Right(())
       }
 
     val pathCache = new PathChildrenCache(client, path, true)
@@ -122,7 +121,8 @@ class ZookeeperClusterSeed(system: ExtendedActorSystem) extends Extension {
                   system.log.info("component=zookeeper-cluster-seed at=downing-cluster-node node-address={}", childAddress)
                   clusterSystem.down(AddressFromURIString(childAddress))
                 } else {
-                  system.log.info("component=zookeeper-cluster-seed at=downing-cluster-node status=not a leader state={} leader={}",
+                  system.log.info(
+                    "component=zookeeper-cluster-seed at=downing-cluster-node status=not a leader state={} leader={}",
                     latch.getState, latch.getLeader)
                 }
               case Right(_) => settings.autoDownUnresolvedStrategy match {
@@ -145,8 +145,8 @@ class ZookeeperClusterSeed(system: ExtendedActorSystem) extends Extension {
   }
 
   /**
-    * Join or create a cluster using Zookeeper to handle
-    */
+   * Join or create a cluster using Zookeeper to handle
+   */
   def join(): Unit = synchronized {
     createPathIfNeeded()
     latch.start()
@@ -217,8 +217,8 @@ class ZookeeperClusterSeed(system: ExtendedActorSystem) extends Extension {
   }
 
   /**
-    * Removes ephemeral nodes for self address that may exist when node restarts abnormally
-    */
+   * Removes ephemeral nodes for self address that may exist when node restarts abnormally
+   */
   def removeEphemeralNodes(): Unit = {
     val ephemeralNodes = try {
       client.getChildren.forPath(path).asScala
