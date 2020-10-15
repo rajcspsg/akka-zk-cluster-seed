@@ -1,10 +1,10 @@
 package akka.cluster.client
 
-import akka.actor.{ActorSystem, Props}
-import akka.cluster.{AkkaCuratorClient, ZookeeperClusterSeedSettings}
-import com.typesafe.config.{Config, ConfigValueFactory}
+import akka.actor.{ ActorSystem, Props }
+import akka.cluster.{ AkkaCuratorClient, ZookeeperClusterSeedSettings }
+import com.typesafe.config.{ Config, ConfigValueFactory }
 import org.apache.curator.framework.CuratorFramework
-import org.apache.curator.framework.recipes.locks.{LockInternals, LockInternalsSorter, StandardLockInternalsDriver}
+import org.apache.curator.framework.recipes.locks.{ LockInternals, LockInternalsSorter, StandardLockInternalsDriver }
 
 import scala.collection.JavaConverters._
 import scala.collection.immutable
@@ -37,15 +37,14 @@ object ZookeeperClusterClientSettings {
     ClusterClientSettings(
       config.withValue(
         "initial-contacts",
-        ConfigValueFactory.fromIterable(immutable.List(contacts: _*).asJava)
-      )
-    )
+        ConfigValueFactory.fromIterable(immutable.List(contacts: _*).asJava)))
   }
 
-  private def getClusterParticipants(client: CuratorFramework, zkPath: String): Seq[String] =  {
-    val participants = LockInternals.getParticipantNodes(client,
+  private def getClusterParticipants(client: CuratorFramework, zkPath: String): Seq[String] = {
+    val participants = LockInternals.getParticipantNodes(
+      client,
       zkPath,
-      "latch-" /* magic string from LeaderLatch.LOCK_NAME */,
+      "latch-" /* magic string from LeaderLatch.LOCK_NAME */ ,
       sorter).asScala
 
     participants.map(path => new String(client.getData.forPath(path))).toSeq

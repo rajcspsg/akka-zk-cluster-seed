@@ -3,13 +3,13 @@ import com.typesafe.sbt.SbtMultiJvm.MultiJvmKeys.MultiJvm
 
 organization := "com.sclasen"
 name := "akka-zk-cluster-seed"
-version := "0.1.11-SNAPSHOT"
+version := "0.1.11.1a-SNAPSHOT"
 
 scalaVersion := "2.12.12"
 crossScalaVersions := Seq(scalaVersion.value)
 
-val akkaVersion = "2.5.+"
-val akkaHttpVersion = "10.0.+"
+val akkaVersion = "2.6.+"
+val akkaHttpVersion = "10.2.+"
 
 val akkaDependencies = Seq(
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
