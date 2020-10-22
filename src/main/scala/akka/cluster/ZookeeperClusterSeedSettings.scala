@@ -7,9 +7,10 @@ import scala.concurrent.Await
 import concurrent.duration._
 import scala.util.Try
 
-class ZookeeperClusterSeedSettings(system: ActorSystem,
-                                   settingsRoot: String = "akka.cluster.seed.zookeeper",
-                                   overwrittenActorSettings: Option[Config] = None) {
+class ZookeeperClusterSeedSettings(
+  system: ActorSystem,
+  settingsRoot: String = "akka.cluster.seed.zookeeper",
+  overwrittenActorSettings: Option[Config] = None) {
 
   private val zc = overwrittenActorSettings.getOrElse(system.settings.config).getConfig(settingsRoot)
 

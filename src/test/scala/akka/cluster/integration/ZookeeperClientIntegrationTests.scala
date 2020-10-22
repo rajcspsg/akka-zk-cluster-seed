@@ -1,12 +1,11 @@
 package akka.cluster.integration
 
-import akka.actor.{ActorPath, ActorSystem}
+import akka.actor.{ ActorPath, ActorSystem }
 import akka.cluster.client.ZookeeperClusterClientSettings
 import akka.cluster.seed.ZookeeperClusterSeed
 import akka.testkit.TestKit
-import com.typesafe.config.{Config, ConfigFactory}
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
-
+import com.typesafe.config.{ Config, ConfigFactory }
+import org.scalatest.{ BeforeAndAfterAll, Matchers, WordSpecLike }
 
 class ZookeeperClientIntegrationTests extends TestKit(
   ActorSystem("test", ZookeeperClientIntegrationSettingsSpec.config(ZookeeperHelper.server.getConnectString)))

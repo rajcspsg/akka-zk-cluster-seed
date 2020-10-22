@@ -2,14 +2,15 @@ package akka.cluster.seed
 
 import akka.actor.ActorSystem
 import akka.cluster.integration.ZookeeperHelper
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.{ Config, ConfigFactory }
 import org.scalatest.concurrent.Eventually
-import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{Matchers, WordSpec}
-
+import org.scalatest.time.{ Seconds, Span }
+import org.scalatest.{ Ignore, Matchers, WordSpec }
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
+// auto downing is removed in akka 2.6.x
+@Ignore
 class ZookeeperAutoDowningIntegrationSpec extends WordSpec with Matchers with Eventually {
 
   import ZookeeperHelper._
@@ -23,17 +24,20 @@ class ZookeeperAutoDowningIntegrationSpec extends WordSpec with Matchers with Ev
   "ZookeeperAutoDowning" should {
     "auto down when leader killed" in {
       // given
-      val system1 = ActorSystem("system-leader",
+      val system1 = ActorSystem(
+        "system-leader",
         ZookeeperAutoDowningIntegrationSettingsSpec.config(server.getConnectString, 2253))
       val zkS1 = ZookeeperClusterSeed(system1)
       zkS1.join()
 
-      val system2 = ActorSystem("system-leader",
+      val system2 = ActorSystem(
+        "system-leader",
         ZookeeperAutoDowningIntegrationSettingsSpec.config(server.getConnectString, 2554))
       val zkS2 = ZookeeperClusterSeed(system2)
       zkS2.join()
 
-      val system3 = ActorSystem("system-leader",
+      val system3 = ActorSystem(
+        "system-leader",
         ZookeeperAutoDowningIntegrationSettingsSpec.config(server.getConnectString, 2555))
       val zkS3 = ZookeeperClusterSeed(system3)
       zkS3.join()
@@ -54,17 +58,20 @@ class ZookeeperAutoDowningIntegrationSpec extends WordSpec with Matchers with Ev
 
     "auto down when non-leader killed" in {
       // given
-      val system1 = ActorSystem("system-nonleader",
+      val system1 = ActorSystem(
+        "system-nonleader",
         ZookeeperAutoDowningIntegrationSettingsSpec.config(server.getConnectString, 2256))
       val zkS1 = ZookeeperClusterSeed(system1)
       zkS1.join()
 
-      val system2 = ActorSystem("system-nonleader",
+      val system2 = ActorSystem(
+        "system-nonleader",
         ZookeeperAutoDowningIntegrationSettingsSpec.config(server.getConnectString, 2557))
       val zkS2 = ZookeeperClusterSeed(system2)
       zkS2.join()
 
-      val system3 = ActorSystem("system-nonleader",
+      val system3 = ActorSystem(
+        "system-nonleader",
         ZookeeperAutoDowningIntegrationSettingsSpec.config(server.getConnectString, 2558))
       val zkS3 = ZookeeperClusterSeed(system3)
       zkS3.join()

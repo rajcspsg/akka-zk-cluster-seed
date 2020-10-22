@@ -2,7 +2,7 @@ package akka.cluster.integration
 
 import akka.actor.ActorSystem
 import akka.cluster.Cluster
-import org.apache.curator.framework.{CuratorFramework, CuratorFrameworkFactory}
+import org.apache.curator.framework.{ CuratorFramework, CuratorFrameworkFactory }
 import org.apache.curator.retry.RetryOneTime
 import org.apache.curator.test.TestingServer
 
