@@ -24,7 +24,7 @@ object ZookeeperClusterSeed extends ExtensionId[ZookeeperClusterSeed] with Exten
 
   override def createExtension(system: ExtendedActorSystem): ZookeeperClusterSeed = new ZookeeperClusterSeed(system)
 
-  override def lookup() = ZookeeperClusterSeed
+  override def lookup: ExtensionId[ZookeeperClusterSeed] = ZookeeperClusterSeed
 }
 
 class ZookeeperClusterSeed(system: ExtendedActorSystem) extends Extension {
@@ -206,7 +206,7 @@ class ZookeeperClusterSeed(system: ExtendedActorSystem) extends Extension {
     }
   }
 
-  private def createPathIfNeeded() {
+  private def createPathIfNeeded(): Unit = {
     Option(client.checkExists().forPath(path)).getOrElse {
       try {
         client.create().creatingParentsIfNeeded().forPath(path)

@@ -3,10 +3,10 @@ import com.typesafe.sbt.SbtMultiJvm.MultiJvmKeys.MultiJvm
 
 organization := "com.sclasen"
 name := "akka-zk-cluster-seed"
-version := "0.1.11.1a-SNAPSHOT"
+version := "0.1.11b"
 
-scalaVersion := "2.12.12"
-crossScalaVersions := Seq(scalaVersion.value)
+scalaVersion := "2.13.3"
+crossScalaVersions := Seq(scalaVersion.value, "2.12.12")
 
 val akkaVersion = "2.6.+"
 val akkaHttpVersion = "10.2.+"
@@ -38,7 +38,7 @@ val testDependencies = Seq(
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion,
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
   "com.typesafe.akka" %% "akka-cluster" % akkaVersion,
-  "org.scalatest" %% "scalatest" % "3.0.1",
+  "org.scalatest" %% "scalatest" % "3.1.4",
   "com.typesafe.akka" %% "akka-multi-node-testkit" % akkaVersion,
   "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
   "org.slf4j" % "log4j-over-slf4j" % "1.7.7",

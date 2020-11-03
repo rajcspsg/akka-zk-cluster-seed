@@ -3,8 +3,8 @@ package akka.cluster.integration
 import akka.actor.ActorSystem
 import akka.cluster.seed.ZookeeperClusterSeed
 import akka.testkit.TestKit
-import com.typesafe.config.{Config, ConfigFactory}
-import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
+import com.typesafe.config.{ Config, ConfigFactory }
+import org.scalatest.{ BeforeAndAfterAll, Matchers, WordSpecLike }
 
 class ZookeeperSeedIntegrationTests extends TestKit(
   ActorSystem("test", ZookeeperSeedIntegrationSettingsSpec.config(ZookeeperHelper.server.getConnectString)))
